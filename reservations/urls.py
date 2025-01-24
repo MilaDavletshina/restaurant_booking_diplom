@@ -1,12 +1,22 @@
 from django.urls import path
-from reservations.views import MainView, Contacts, Message, AboutListView, ReservationListView, ReservationDetailView, ReservationCreateView, ReservationUpdateView, ReservationDeleteView
+from reservations.views import (
+    MainView,
+    Contacts,
+    Message,
+    AboutListView,
+    ReservationListView,
+    ReservationDetailView,
+    ReservationCreateView,
+    ReservationUpdateView,
+    ReservationDeleteView,
+)
 from reservations.apps import ReservationsConfig
 
 
 app_name = ReservationsConfig.name
 
 urlpatterns = [
-    # path('home/', views.home, name='home'),
+    # path('', home, name='home.html'),
     path("", MainView.as_view(), name="main"),
     path("contacts/", Contacts.as_view(), name="contacts"),
     path("message/", Message.as_view(), name="message"),
