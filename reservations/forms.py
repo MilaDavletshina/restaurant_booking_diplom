@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from reservations.models import Reservation
+from reservations.models import Reservation, Restaurant
 
 
 class StyleFormMixin:
@@ -13,4 +13,10 @@ class StyleFormMixin:
 class ReservationForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Reservation
+        fields = "__all__"
+
+
+class RestaurantForm(StyleFormMixin, ModelForm):
+    class Meta:
+        model = Restaurant
         fields = "__all__"
