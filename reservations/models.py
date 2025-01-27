@@ -17,6 +17,7 @@ class Restaurant(models.Model):
     class Meta:
         verbose_name = "Ресторан"
         verbose_name_plural = "Рестораны"
+        ordering = ["name",]
 
 
 class Reservation(models.Model):
@@ -36,6 +37,7 @@ class Reservation(models.Model):
     class Meta:
         verbose_name = "Бронирование"
         verbose_name_plural = "Бронирования"
+        ordering = ["date", ]
 
 
 class Contact(models.Model):
@@ -49,3 +51,4 @@ class Contact(models.Model):
     class Meta:
         verbose_name = "Контакт"
         verbose_name_plural = "Контакты"
+        ordering = ["name", ]
