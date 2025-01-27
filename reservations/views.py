@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from reservations.forms import ReservationForm
-from reservations.models import Reservation
+from reservations.models import Reservation, Restaurant
 
 
 def home(request):
@@ -16,7 +16,7 @@ def home(request):
 class Contacts(TemplateView):
     """Шаблон контакты"""
 
-    template_name = "message/contacts.html"
+    template_name = "reservations/contacts.html"
 
     def contacts(request):
         if request.method == "POST":
@@ -32,9 +32,9 @@ class Message(TemplateView):
     template_name = "reservations/message.html"
 
 
-class MainView(TemplateView):
+class MainView(ListView):
     """Главная страница"""
-
+    model = Restaurant
     template_name = "reservations/main.html"
 
 
