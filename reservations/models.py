@@ -30,11 +30,11 @@ class Reservation(models.Model):
         (STATUS_PENDING, "статус: В ожидании"),
         (STATUS_CONFIRMED, "статус: Подтвержден"),
     ]
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name="Ресторан", **NULLABLE)
-    date = models.DateTimeField()
-    guests = models.PositiveIntegerField(default='2', validators=[MaxValueValidator(25)], verbose_name="Количество персон", help_text='Введите количество гостей')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    date = models.DateTimeField(verbose_name="Дата")
+    guests = models.PositiveIntegerField(default='2', validators=[MaxValueValidator(25)], verbose_name="Количество персон")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING, verbose_name="Статус")
 
     class Meta:
         verbose_name = "Бронирование"
