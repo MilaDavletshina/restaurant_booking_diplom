@@ -26,6 +26,12 @@ class Contacts(TemplateView):
         return render(request, "reservations/contacts.html")
 
 
+class Feedback(TemplateView):
+    """Шаблон обратная связь"""
+
+    template_name = "reservations/feedback.html"
+
+
 class Message(TemplateView):
     """Страница ответа на отправленное сообщение"""
 
