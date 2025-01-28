@@ -7,9 +7,6 @@
 <div class="container">
     <div class="row text-start">
         <div class="lead">
-            <div class="card-header">
-                <h4 class="btn btn-sm btn-outline-secondary">Наши контакты:</h4>
-            </div>
 
             <div class="btn btn-sm btn-outline-secondary" style="width: 37rem;">
                 <p>Адрес: 27, Quai Branly, 75007 Paris</p>
@@ -19,32 +16,6 @@
                 <p>Instagram: @chouchou.quaibranly</p>
             </div>
 
-            <div class="card-header">
-                <h4 class="btn btn-sm btn-outline-secondary">Свяжитесь с нами:</h4>
-            </div>
-
-            <div class="card-body">
-                <form method="post" action="" class="btn btn-sm btn-outline-secondary">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="name">Имя</label>
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="phone">Телефон</label>
-                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Контактный телефон" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="message">Сообщение</label>
-                    <textarea type="text" name="message" class="form-control" id="message" placeholder="Введите сообщение" required></textarea>
-                </div>
-
-                <a class="btn btn-primary btn-sm" href="{% url 'reservations:message' %}" role="button">Отправить</a>
-
-                </form>
-            </div>
         </div>
     </div>
 </div>
