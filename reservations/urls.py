@@ -2,6 +2,7 @@ from django.urls import path
 from reservations.views import (
     MainView,
     Contacts,
+    Feedback,
     Message,
     AboutListView,
     ReservationListView,
@@ -19,6 +20,7 @@ urlpatterns = [
     # path('', home, name='home.html'),
     path("", MainView.as_view(), name="main"),
     path("contacts/", Contacts.as_view(), name="contacts"),
+    path("feedback/", Feedback.as_view(), name="feedback"),
     path("message/", Message.as_view(), name="message"),
     path("about/", AboutListView.as_view(), name="about"),
 
