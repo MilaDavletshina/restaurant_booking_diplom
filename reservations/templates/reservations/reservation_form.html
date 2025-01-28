@@ -1,9 +1,9 @@
-{% extends 'reservation/home.html' %}
+{% extends 'reservations/home.html' %}
 
 {% block content %}
 <main class="flex-shrink-0">
   <div class="container">
-    <h1 class="mt-5">Рассылка</h1>
+    <h1 class="mt-5">Бронирование</h1>
     <p class="lead"></p>
     <div class="row mb-2">
     <div class="col-md-12">
@@ -29,7 +29,7 @@
                         </div>
                         <div class="row mb-2">
                         <div class="col-md-12">
-                            <a class="btn btn-dark" href="{% url 'message:mail_list' %}" role="button">Назад</a>
+                            <a class="btn btn-dark" href="{% url 'reservations:main' %}" role="button">Назад</a>
                         </div>
                         </div>
                     </div>
