@@ -168,10 +168,10 @@
       <nav class="nav nav-masthead justify-content-center float-md-end">
         <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="{% url 'reservations:main' %}">Главная</a>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:about' %}">О ресторане</a>
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_list' %}">Бронирование</a>
         <a class="btn btn-sm btn-outline-secondary" href="#">Личный кабинет</a>
         <a class="link-secondary" href="#" aria-label="Search">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-5.2-5.2"/></svg>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_create' %}">Забронировать</a>
         </a>
         <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
       </nav>
