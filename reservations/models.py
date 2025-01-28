@@ -8,6 +8,7 @@ NULLABLE = {"blank": True, "null": True}
 
 
 class Restaurant(models.Model):
+    """Модель ресторана"""
     name = models.CharField(max_length=20, verbose_name="Название", help_text="Введите название")
     description = models.TextField(verbose_name="Описание", help_text="Введите описание")
     history = models.TextField(verbose_name="История ресторана", help_text="Введите описание истории", **NULLABLE)
@@ -22,24 +23,33 @@ class Restaurant(models.Model):
         ordering = ["name",]
 
 
-class Reservation(models.Model):
-    STATUS_PENDING = "В ожидании"
-    STATUS_CONFIRMED = "Подтвержден"
+class Table(models.Model):
+    """Модель стола"""
+    number = models.IntegerField(unique=True, verbose_name="Номер стола")
+    capacity = models.IntegerField(verbose_name="Вместимость столика")
+    is_available = models.BooleanField(default=True, verbose_name="Доступность столика")
 
-    STATUS_CHOICES = [
-        (STATUS_PENDING, "статус: В ожидании"),
-        (STATUS_CONFIRMED, "статус: Подтвержден"),
-    ]
+    def __str__(self):
+        return f"Столик {self.number} (Вместимость: {self.capacity})"
+
+
+class Reservation(models.Model):
+    """Модель бронирования"""
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name="Ресторан", **NULLABLE)
-    date = models.DateTimeField(verbose_name="Дата")
-    guests = models.PositiveIntegerField(default='2', validators=[MaxValueValidator(25)], verbose_name="Количество персон")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING, verbose_name="Статус")
+    table = models.ForeignKey(Table, on_delete=models.CASCADE, verbose_name="Номер столика", **NULLABLE)
+    reserved_at = models.DateTimeField(verbose_name="Дата и время бронирования", **NULLABLE)
+    customer_name = models.CharField(max_length=100, verbose_name="Имя клиента", **NULLABLE)
+    customer_contact = models.CharField(max_length=100, verbose_name="Контактная информация", **NULLABLE)
+
+    def __str__(self):
+        return f'Зарезервировано для {self.customer_name} в {self.reserved_at} столик {self.table}'
 
     class Meta:
         verbose_name = "Бронирование"
         verbose_name_plural = "Бронирования"
-        ordering = ["date", ]
+        ordering = ["reserved_at", ]
 
 
 class Contact(models.Model):
