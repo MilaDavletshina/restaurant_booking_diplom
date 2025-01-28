@@ -4,7 +4,7 @@ from reservations.views import (
     Contacts,
     Feedback,
     Message,
-    AboutListView,
+    AboutView,
     ReservationListView,
     ReservationDetailView,
     ReservationCreateView,
@@ -22,7 +22,7 @@ urlpatterns = [
     path("contacts/", Contacts.as_view(), name="contacts"),
     path("feedback/", Feedback.as_view(), name="feedback"),
     path("message/", Message.as_view(), name="message"),
-    path("about/", AboutListView.as_view(), name="about"),
+    path("about/", AboutView.as_view(), name="about"),
 
     path("reservation/", ReservationListView.as_view(), name="reservation_list"),
     path("reservation/<int:pk>/", ReservationDetailView.as_view(), name="reservation_detail"),

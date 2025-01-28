@@ -44,9 +44,10 @@ class MainView(ListView):
     template_name = "reservations/main.html"
 
 
-class AboutListView(ListView):
+class AboutView(ListView):
     """Страница о ресторане"""
 
+    model = Restaurant
     template_name = "reservations/about.html"
 
 
