@@ -10,6 +10,8 @@ NULLABLE = {"blank": True, "null": True}
 class Restaurant(models.Model):
     name = models.CharField(max_length=20, verbose_name="Название", help_text="Введите название")
     description = models.TextField(verbose_name="Описание", help_text="Введите описание")
+    history = models.TextField(verbose_name="История ресторана", help_text="Введите описание истории", **NULLABLE)
+    mission = models.TextField(verbose_name="Миссия и ценности", help_text="Введите описание миссии и ценностей", **NULLABLE)
 
     def __str__(self):
         return self.name
