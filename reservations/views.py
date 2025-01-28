@@ -56,6 +56,11 @@ class ReservationListView(ListView):
 
     model = Reservation
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.save()
+        return self.object
+
 
 class ReservationDetailView(DetailView, LoginRequiredMixin):
     """Бронирование, просмотр"""
@@ -70,6 +75,12 @@ class ReservationCreateView(CreateView, LoginRequiredMixin):
     model = Reservation
     form_class = ReservationForm
     success_url = reverse_lazy("reservations:main")
+
+    def form_valid(self, form):
+        reservation = form.save()
+        reservation.save()
+
+        return super().form_valid(form)
 
 
 class ReservationUpdateView(UpdateView, LoginRequiredMixin):
