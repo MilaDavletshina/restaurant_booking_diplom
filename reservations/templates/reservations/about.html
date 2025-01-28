@@ -1,10 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'reservations/home.html' %}
+{% load my_tags %}
+{% block content %}
 
-</body>
-</html>
+<table>
+    <tr>
+        <th>
+            <h3>История ресторана</h3>
+        </th>
+        <th>
+            <h3>Миссия и ценности</h3>
+        </th>
+    </tr>
+
+    {% for restaurant in object_list %}
+    <tr>
+        <td>
+            <p>{{ restaurant.history }}</p>
+        </td>
+        <td>
+            <p>1. Обеспечение высокого уровня обслуживания</p>
+            <p>2. Качественные блюда из свежих продуктов</p>
+            <p>3. Создание уникального атмосферного пространства</p>
+            <p>4. Инновации в меню и обслуживании</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<table>
+    <tr>
+        <th>
+            <h3>Команда</h3>
+        </th>
+    </tr>
+
+    <tr>
+        <td>
+            <div class="card" style="width: 18rem;">
+                <img src="/media/chef.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Шеф-повар</h5>
+                    <p class="card-text">Alexandre Semperé</p>
+                </div>
+            </div>
+        </td>
+
+        <td>
+            <div class="card" style="width: 18rem;">
+                <img src="/media/somele.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Сомелье</h5>
+                    <p class="card-text">Romain Pernot</p>
+                </div>
+            </div>
+        </td>
+
+        <td>
+            <div class="card" style="width: 19rem;">
+                <img src="/media/team.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Команда обслуживания</h5>
+                    <p class="card-text">Jan and Pol Jumetz, Ioana Plascoru</p>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+{% endblock %}
