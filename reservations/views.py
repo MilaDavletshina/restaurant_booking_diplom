@@ -1,13 +1,14 @@
 from datetime import timezone
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import (TemplateView, ListView, CreateView)
+from django.views.generic import (TemplateView, ListView, CreateView, DetailView)
 from reservations.forms import ReservationForm
 from reservations.models import Reservation, Restaurant
 
-# DetailView, , UpdateView, DeleteView
+# UpdateView, DeleteView
 
 
 def home(request):
@@ -79,15 +80,6 @@ class ReservationCreateView(CreateView):
 
 
 
-
-
-# class ReservationDetailView(DetailView, LoginRequiredMixin):
-#     """Бронирование, просмотр"""
-#
-#     model = Reservation
-#     form_class = ReservationForm
-#
-#
 
 
 
