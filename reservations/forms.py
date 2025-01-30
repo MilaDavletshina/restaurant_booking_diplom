@@ -1,4 +1,7 @@
-from django.forms import ModelForm, DateTimeField, DateInput
+from datetime import timedelta
+from django.db.models import Q
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 from reservations.models import Reservation, Restaurant
 from django import forms
 
@@ -12,6 +15,7 @@ class StyleFormMixin:
 
 class RestaurantForm(StyleFormMixin, ModelForm):
     """Форма создания нового ресторана."""
+
     class Meta:
         model = Restaurant
         fields = "__all__"
@@ -36,5 +40,29 @@ class ReservationForm(ModelForm):
         super(ReservationForm, self).__init__(*args, **kwargs)
         self.fields["table"].widget.attrs.update({'class': 'form-control'})
         self.fields["customer_name"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Уточните Ваше имя'})
-        self.fields["customer_contact"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Укажите контактную информацию'})
+        self.fields["customer_contact"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Укажите контактный номер телефона для связи'})
 
+    def clean(self):
+        """Валидация формы, на проверку отсутствия брони выбранного столика"""
+        cleaned_data = super().clean()
+        table = cleaned_data.get("table")
+        reserved_at = cleaned_data.get("reserved_at")
+
+        if table and reserved_at:
+            # Определяем начальное и конечное время бронирования
+            start_time = reserved_at
+            end_time = reserved_at + timedelta(minutes=60)
+
+            # Проверяем, есть ли текущее бронирование на этот столик
+            if Reservation.objects.filter(
+                    Q(table=table) &
+                    Q(reserved_at__lt=end_time) &
+                    Q(reserved_at__gte=start_time)
+            ).exists() or Reservation.objects.filter(
+                Q(table=table) &
+                Q(reserved_at__gte=start_time) &
+                Q(reserved_at__lt=end_time)
+            ).exists():
+                raise ValidationError(f"Выбранный столик №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
+
+        return cleaned_data
