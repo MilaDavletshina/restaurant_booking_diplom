@@ -43,7 +43,7 @@ class ReservationForm(ModelForm):
         self.fields["customer_contact"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Укажите контактный номер телефона для связи'})
 
     def clean(self):
-        """Валидация формы, на проверку отсутствия брони выбранного столика"""
+        """Валидация формы, на проверку отсутствия брони выбранного столика."""
         cleaned_data = super().clean()
         table = cleaned_data.get("table")
         reserved_at = cleaned_data.get("reserved_at")
@@ -66,3 +66,11 @@ class ReservationForm(ModelForm):
                 raise ValidationError(f"Выбранный столик №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
 
         return cleaned_data
+
+    def save(self, commit=True):
+        """Сохранение успешного бронирования."""
+        reservation = super().save(commit=False)
+
+        if commit:
+            reservation.save()  # Сохраняем в БД
+        return reservation
