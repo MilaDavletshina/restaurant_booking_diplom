@@ -7,6 +7,7 @@ from reservations.views import (
     AboutView,
     ReservationListView,
     ReservationCreateView,
+    PersonalAccountListView,
 )
 from reservations.apps import ReservationsConfig
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path("feedback/", Feedback.as_view(), name="feedback"),
     path("message/", Message.as_view(), name="message"),
     path("about/", AboutView.as_view(), name="about"),
+
+    path("personal_account/", PersonalAccountListView.as_view(), name="personal_account"),
 
     path("reservation/", ReservationListView.as_view(), name="reservation_list"),
     path("reservation/create/", ReservationCreateView.as_view(), name="reservation_create"),
