@@ -7,6 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import (TemplateView, ListView, CreateView, DetailView)
 from reservations.forms import ReservationForm
 from reservations.models import Reservation, Restaurant
+from users.models import User
+
 
 # UpdateView, DeleteView
 
@@ -77,6 +79,11 @@ class ReservationCreateView(CreateView):
         # Если форма не валидна, показываем ее с ошибками
         return super().form_invalid(form)
 
+
+class PersonalAccountListView(ListView):
+    """Шаблон личного кабинета"""
+    model = User
+    template_name = "reservations/personal_account.html"
 
 
 
