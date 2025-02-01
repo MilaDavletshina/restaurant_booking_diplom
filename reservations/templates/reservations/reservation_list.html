@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'reservations/home.html' %}
+{% load my_tags %}
+{% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Бронирование</title>
 </head>
 <body>
+    <h1>Ваши бронирования</h1>
 
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <ul>
+
+        {% for reservation in reservations %}
+
+            <li>Столик №{{ reservation.table.number }} забронирован на {{ reservation.reserved_at }}</li>
+        {% endfor %}
+    </ul>
+
+
+    <a href="{% url 'reservations:reservation_create' %}">Создать новое бронирование</a>
 </body>
-</html>
+
+
+
+{% endblock %}
