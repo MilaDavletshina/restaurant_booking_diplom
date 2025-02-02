@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Reservation, Restaurant, Contact, Table
+from .models import Reservation, Restaurant, Table
 
 
 @admin.register(Reservation)
@@ -14,13 +14,6 @@ class RestaurantAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "description", "history", "mission")
     list_filter = ("name",)
     search_fields = ("name",)
-
-
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "email", "message")
-    list_filter = ("name",)
-    search_fields = ("user", "email",)
 
 
 @admin.register(Table)
