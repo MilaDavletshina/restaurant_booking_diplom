@@ -6,19 +6,12 @@ from reservations.views import (
     Message,
     AboutView,
     ReservationListView,
-    ReservationCreateView,
+    ReservationUpdateView,
     PersonalAccountListView,
+    ReservationCreateView,
+    ReservationDeleteView,
 )
 from reservations.apps import ReservationsConfig
-
-
-#
-# ,
-#
-# ReservationUpdateView,
-# ReservationDeleteView,
-# ReserveTableView,
-# ConfirmationView
 
 
 app_name = ReservationsConfig.name
@@ -31,13 +24,10 @@ urlpatterns = [
     path("message/", Message.as_view(), name="message"),
     path("about/", AboutView.as_view(), name="about"),
 
-    path("personal_account/", PersonalAccountListView.as_view(), name="personal_account"),
-
     path("reservation/", ReservationListView.as_view(), name="reservation_list"),
     path("reservation/create/", ReservationCreateView.as_view(), name="reservation_create"),
-    # path("reservation/<int:pk>/update/", ReservationUpdateView.as_view(), name="reservation_update"),
-    # path("reservation/<int:pk>/delete/", ReservationDeleteView.as_view(), name="reservation_delete"),
+    path("reservation/<int:pk>/update/", ReservationUpdateView.as_view(), name="reservation_update"),
+    path("reservation/<int:pk>/delete/", ReservationDeleteView.as_view(), name="reservation_delete"),
 
-
-
+    path("personal_account/", PersonalAccountListView.as_view(), name="personal_account"),
 ]
