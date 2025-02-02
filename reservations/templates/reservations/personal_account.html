@@ -2,6 +2,60 @@
 {% load my_tags %}
 {% block content %}
 
+<h2>Ваши бронирования</h2>
+
+<table border="1" class="table table-dark table-hover table-bordered">
+    <tr>
+        <th>
+            <h6>Дата бронирования</h6>
+        </th>
+        <th>
+            <h6>Забронировано на имя</h6>
+        </th>
+        <th>
+            <h6>№ Стола</h6>
+        </th>
+        <th>
+            <h6>Редактировать</h6>
+        </th>
+        <th>
+            <h6>Удалить</h6>
+        </th>
+    </tr>
+
+    {% for object in object_list %}
+    <tr>
+        <td>
+            <p>{{object.reserved_at|date:"d.m.Y в H:i"}}</p>
+        </td>
+        <td>
+            <p>{{object.customer_name}}</p>
+        </td>
+        <td>
+            <p>{{object.table}}</p>
+        </td>
+        <td>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_update' object.pk %}" role="button">Редактировать</a>
+        </td>
+        <td>
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_delete' object.pk %}" role="button">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<div class="row mb-2">
+
+    <div class="col-md-12">
+
+
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_create' %}">Создать новое бронирование</a>
+    </div>
+
+
+</div>
+
 
 
 {% endblock %}
