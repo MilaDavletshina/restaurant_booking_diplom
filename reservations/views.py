@@ -66,7 +66,7 @@ class ReservationListView(ListView):
 
     def get_queryset(self):
         # Сортируем бронирования по номеру стола
-        return Reservation.objects.order_by('table')
+        return Reservation.objects.order_by('table', 'reserved_at')
 
 
 class ReservationCreateView(CreateView):
