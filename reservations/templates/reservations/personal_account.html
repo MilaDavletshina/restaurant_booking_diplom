@@ -10,10 +10,10 @@
             <h6>Дата бронирования</h6>
         </th>
         <th>
-            <h6>Забронировано на имя</h6>
+            <h6>№ Стола</h6>
         </th>
         <th>
-            <h6>№ Стола</h6>
+            <h6>Забронировано на имя</h6>
         </th>
         <th>
             <h6>Редактировать</h6>
@@ -29,10 +29,10 @@
             <p>{{object.reserved_at|date:"d.m.Y в H:i"}}</p>
         </td>
         <td>
-            <p>{{object.customer_name}}</p>
+            <p>{{object.table}}</p>
         </td>
         <td>
-            <p>{{object.table}}</p>
+            <p>{{object.customer_name}}</p>
         </td>
         <td>
             <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_update' object.pk %}" role="button">Редактировать</a>
