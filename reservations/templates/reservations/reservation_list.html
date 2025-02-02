@@ -6,9 +6,10 @@
 
 <div class="container">
     <p></p>
+
     {% if messages %}
         {% for message in messages %}
-            {{ message }}
+            <label class="btn btn-outline-success" for="success-outlined">{{ message }}</label>
         {% endfor %}
     {% endif %}
     <p></p>
