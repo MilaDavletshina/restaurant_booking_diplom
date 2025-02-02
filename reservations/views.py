@@ -1,16 +1,14 @@
 from datetime import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import (TemplateView, ListView, CreateView, DetailView)
+from django.views.generic import (TemplateView, ListView, CreateView, UpdateView, DeleteView)
 from reservations.forms import ReservationForm
-from reservations.models import Reservation, Restaurant
+from reservations.models import Reservation, Restaurant, Table
 from users.models import User
-
-
-# UpdateView, DeleteView
 
 
 def home(request):
@@ -57,12 +55,25 @@ class ReservationListView(ListView):
     model = Reservation
     template_name = "reservations/reservation_list.html"
     context_object_name = 'reservations'
+    form_class = ReservationForm
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            self.object.save()
+            return self.object
+        raise PermissionDenied
+
+    def get_queryset(self):
+        # Сортируем бронирования по номеру стола
+        return Reservation.objects.order_by('table')
 
 
 class ReservationCreateView(CreateView):
     """Страница создания бронирования."""
     model = Reservation
     form_class = ReservationForm
+    template_name = "reservations/reservation_list.html"
     success_url = reverse_lazy("reservations:reservation_list")
 
     def form_valid(self, form):
@@ -80,30 +91,60 @@ class ReservationCreateView(CreateView):
         return super().form_invalid(form)
 
 
+class ReservationUpdateView(UpdateView, LoginRequiredMixin):
+    """Редактирование бронирования."""
+
+    model = Reservation
+    form_class = ReservationForm
+    success_url = reverse_lazy("reservations:personal_account")
+
+    def form_valid(self, form):
+        # сохраняем форму
+        form.save()
+        # Устанавливаем success_url в зависимости от того, редактируем ли мы бронирование
+        self.success_url = reverse_lazy("reservations:personal_account")
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            self.object.save()
+            return self.object
+        raise PermissionDenied
+
+
+class ReservationDeleteView(DeleteView):
+    """Удаление бронирования."""
+
+    model = Reservation
+    success_url = reverse_lazy("reservations:personal_account")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            self.object.save()
+            return self.object
+        raise PermissionDenied
+
+
 class PersonalAccountListView(ListView):
     """Шаблон личного кабинета"""
-    model = User
+    model = Reservation
     template_name = "reservations/personal_account.html"
 
+    def get_queryset(self):
+        # Возвращаем только бронирования текущего пользователя
+        return Reservation.objects.filter(owner=self.request.user)
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            self.object.save()
+            return self.object
+        raise PermissionDenied
 
 
 
 
-
-#
-#
-# class ReservationUpdateView(UpdateView, LoginRequiredMixin):
-#     """Бронирование, обновление"""
-#
-#     model = Reservation
-#     form_class = ReservationForm
-#     success_url = reverse_lazy("reservations:main")
-#
-#
-# class ReservationDeleteView(DeleteView):
-#     """Получатель рассылки - удаление"""
-#
-#     model = Reservation
-#     success_url = reverse_lazy("reservations:main")
 
 
