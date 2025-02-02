@@ -109,6 +109,7 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/cover.css' %}" rel="stylesheet">
   </head>
+<!--  выравнивание основного текста-->
   <body class="d-flex h-100 text-center text-bg-dark">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
@@ -130,22 +131,28 @@
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <header class="mb-auto">
     <div>
-      <nav class="nav nav-masthead justify-content-center float-md-end">
+      <!-- Левая часть навигации -->
+      <nav class="nav nav-masthead justify-content-start float-start">
         <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="{% url 'reservations:main' %}">Главная</a>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:about' %}">О ресторане</a>
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_list' %}"><Бронирования></a>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_create' %}">Забронировать</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:reservation_list' %}">Бронирования</a>
 
+      </nav>
+
+      <!-- Правая часть навигации -->
+      <nav class="nav nav-masthead justify-content-end float-end">
         {% if user.is_authenticated %}
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:logout' %}">Пользователь: {{user.first_name}} {{user.last_name}}</a>
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:personal_account' %}">Личный кабинет</a>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:logout' %}">Выход</a>
-
         {% else %}
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:login' %}">Вход</a>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:register' %}">Регистрация</a>
         {% endif %}
 
+        {% if user.is_authenticated %}
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'reservations:personal_account' %}">Личный кабинет</a>
+        <a class="mt-auto text-white-50">{{ user.first_name }} {{ user.last_name }} добро пожаловать в le Chouchou</a>
+        {% endif %}
       </nav>
     </div>
   </header>
