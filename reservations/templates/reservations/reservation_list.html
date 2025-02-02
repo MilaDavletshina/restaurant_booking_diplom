@@ -2,8 +2,6 @@
 {% load my_tags %}
 {% block content %}
 
-
-
 <div class="container">
     <p></p>
 
@@ -12,7 +10,7 @@
             <label class="btn btn-outline-success" for="success-outlined">{{ message }}</label>
         {% endfor %}
     {% endif %}
-    
+
     <p></p>
     <form class="row" method="post" enctype="multipart/form-data">
         {% include 'reservations/reservation_form.html' %}
@@ -43,35 +41,4 @@
         </div>
     </form>
 </div>
-
-<!--    <h2>Бронирование</h2>-->
-
-<!--<head>-->
-<!--    <title>Бронирование</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <h1>Ваши бронирования</h1>-->
-
-<!--    {% if messages %}-->
-<!--        <ul class="messages">-->
-<!--            {% for message in messages %}-->
-<!--                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>-->
-<!--            {% endfor %}-->
-<!--        </ul>-->
-<!--    {% endif %}-->
-
-<!--    <ul>-->
-
-<!--        {% for reservation in reservations %}-->
-
-<!--            <li>Столик №{{ reservation.table.number }} забронирован на {{ reservation.reserved_at }}</li>-->
-<!--        {% endfor %}-->
-<!--    </ul>-->
-
-
-<!--    <a href="{% url 'reservations:reservation_create' %}">Создать новое бронирование</a>-->
-<!--</body>-->
-
-
-
 {% endblock %}
