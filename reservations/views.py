@@ -133,8 +133,9 @@ class PersonalAccountListView(ListView):
     template_name = "reservations/personal_account.html"
 
     def get_queryset(self):
-        # Возвращаем только бронирования текущего пользователя
-        return Reservation.objects.filter(owner=self.request.user)
+        # Фильтруем по владельцу и сортируем по дате и столику
+        queryset = Reservation.objects.filter(owner=self.request.user).order_by('reserved_at', 'table')
+        return queryset
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
