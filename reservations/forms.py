@@ -27,7 +27,7 @@ class ReservationForm(ModelForm):
     class Meta:
         """Стилизация формы бронирования столика."""
         model = Reservation
-        fields = ["table", 'reserved_at', 'customer_name', "customer_contact"]
+        fields = ["owner", "table", "reserved_at", "customer_name", "customer_contact"]
         widgets = {
             'reserved_at': forms.DateTimeInput(attrs={
                 'class': 'form-control',
@@ -39,8 +39,9 @@ class ReservationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReservationForm, self).__init__(*args, **kwargs)
         self.fields["table"].widget.attrs.update({'class': 'form-control'})
-        self.fields["customer_name"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Уточните Ваше имя'})
+        self.fields["customer_name"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Уточните имя на кого бронируете столик'})
         self.fields["customer_contact"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Укажите контактный номер телефона для связи'})
+        self.fields["owner"].widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         """Валидация формы, на проверку отсутствия брони выбранного столика."""
