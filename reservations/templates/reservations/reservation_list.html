@@ -2,31 +2,73 @@
 {% load my_tags %}
 {% block content %}
 
-<head>
-    <title>Бронирование</title>
-</head>
-<body>
-    <h1>Ваши бронирования</h1>
 
+
+<div class="container">
+    <p></p>
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <ul>
-
-        {% for reservation in reservations %}
-
-            <li>Столик №{{ reservation.table.number }} забронирован на {{ reservation.reserved_at }}</li>
+        {% for message in messages %}
+            {{ message }}
         {% endfor %}
-    </ul>
+    {% endif %}
+    <p></p>
+    <form class="row" method="post" enctype="multipart/form-data">
+        {% include 'reservations/reservation_form.html' %}
+        <div class="col-6">
+            <h4>Доступные бронирования</h4>
+            <table border="1" class="table table-dark table-hover table-bordered">
+                <tr>
+                    <th>
+                        <h6>Зарезервированные № Столов</h6>
+                    </th>
+                    <th>
+                        <h6>Дата</h6>
+                    </th>
+                </tr>
+
+                {% for object in object_list %}
+                <tr>
+                    <td>
+                        <p>{{object.table}}</p>
+                    </td>
+                     <td>
+                        <p>{{object.reserved_at|date:"d.m.Y в H:i"}}</p>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </form>
+</div>
+
+<!--    <h2>Бронирование</h2>-->
+
+<!--<head>-->
+<!--    <title>Бронирование</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Ваши бронирования</h1>-->
+
+<!--    {% if messages %}-->
+<!--        <ul class="messages">-->
+<!--            {% for message in messages %}-->
+<!--                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
+<!--    {% endif %}-->
+
+<!--    <ul>-->
+
+<!--        {% for reservation in reservations %}-->
+
+<!--            <li>Столик №{{ reservation.table.number }} забронирован на {{ reservation.reserved_at }}</li>-->
+<!--        {% endfor %}-->
+<!--    </ul>-->
 
 
-    <a href="{% url 'reservations:reservation_create' %}">Создать новое бронирование</a>
-</body>
+<!--    <a href="{% url 'reservations:reservation_create' %}">Создать новое бронирование</a>-->
+<!--</body>-->
 
 
 
