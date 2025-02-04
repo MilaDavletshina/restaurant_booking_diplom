@@ -17,10 +17,11 @@
             <h4>Бронирование стола</h4>
             <form method="post">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="col-12 btn btn-sm btn-outline-secondary">
                     {{ form.as_p }}
                 </div>
-                <button type="submit" class="btn btn-light">Создать</button>
+                <p></p>
+                <button type="submit" class="btn btn-sm btn-outline-secondary mb-0">Создать</button>
             </form>
         </div>
 
