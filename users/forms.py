@@ -2,9 +2,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.forms import ModelForm
 from django.urls import reverse_lazy
-
+from django.utils.safestring import mark_safe
 from reservations.forms import StyleFormMixin
 from users.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
@@ -13,6 +14,37 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
         model = User
         fields = ("email", "first_name", "phone_number", "password1", "password2")
 
+        # Изменяем поля на русский язык
+        labels = {
+            'password1': 'Пароль',
+            'password2': 'Подтверждение пароля',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # mark_safe позволяет Django интерпретировать HTML-теги
+        # <br> чтобы каждая строка переносилась на новую строку в HTML.
+        self.fields['password1'].help_text = mark_safe(
+            "* Ваш пароль должен содержать как минимум 8 символов.<br>"
+            "* Ваш пароль не может быть слишком похож на другую вашу личную информацию.<br>"
+            "* Ваш пароль не может быть часто используемым паролем.<br>"
+            "* Ваш пароль не может состоять только из цифр."
+        )
+        self.fields['password2'].help_text = _(
+            "Для подтверждения введите, пожалуйста, пароль ещё раз."
+        )
+
+        self.fields['password1'].error_messages = {
+            'password_too_short': _("Ваш пароль должен содержать как минимум 8 символов."),
+            'password_too_similar': _("Ваш пароль не может быть слишком похож на другую вашу личную информацию."),
+            'password_too_common': _("Ваш пароль не может быть часто используемым паролем."),
+            'password_entirely_numeric': _("Ваш пароль не может состоять только из цифр."),
+        }
+
+        # Используем переопределенные поля на русский язык
+        for k, v in self.Meta.labels.items():
+            self[k].label = v
 
 class UserForm(StyleFormMixin, UserChangeForm):
     """Форма данных пользователя"""
