@@ -20,23 +20,20 @@ class Contacts(TemplateView):
     """Шаблон контакты."""
     template_name = "reservations/contacts.html"
 
-    def contacts(request):
-        """Обработка POST-запроса."""
+    def post(self, request, *args, **kwargs):
+        """Обработка POST-запроса ответа на обратную связь."""
         if request.method == "POST":
             name = request.POST.get("name")  # получаем имя
             message = request.POST.get("message")  # получаем сообщение
-            return HttpResponse(f"Спасибо, {name}! {message} Сообщение получено.")
-        return render(request, "reservations/contacts.html")
+            # Отправляем сообщение об успешной отправке
+            messages.success(request, f"Спасибо, {name}! Ваше сообщение успешно отправлено.")
+            return redirect("reservations:contacts")  # Перенаправляем на ту же страницу
+        return render(request, self.template_name)
 
 
 class Feedback(TemplateView):
     """Шаблон обратной связи."""
     template_name = "reservations/feedback.html"
-
-
-class Message(TemplateView):
-    """Шаблон ответа на обратную связь."""
-    template_name = "reservations/message.html"
 
 
 class MainView(ListView):
