@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from reservations.models import Reservation, Restaurant
 from django import forms
+from django.utils import timezone
 
 
 class StyleFormMixin:
@@ -48,6 +49,9 @@ class ReservationForm(ModelForm):
         cleaned_data = super().clean()
         table = cleaned_data.get("table")
         reserved_at = cleaned_data.get("reserved_at")
+
+        if reserved_at and reserved_at < timezone.now():
+            raise ValidationError("Выбранное время и дата не могут быть в прошлом.")
 
         if table and reserved_at:
             # Определяем начальное и конечное время бронирования
