@@ -10,6 +10,10 @@ from reservations.views import (
     PersonalAccountListView,
     ReservationCreateView,
     ReservationDeleteView,
+    AvailableTablesListView,
+    Services,
+    Mission,
+    Team,
 )
 from reservations.apps import ReservationsConfig
 
@@ -23,6 +27,9 @@ urlpatterns = [
     path("feedback/", Feedback.as_view(), name="feedback"),
     path("message/", Message.as_view(), name="message"),
     path("about/", AboutView.as_view(), name="about"),
+    path("services/", Services.as_view(), name="services"),
+    path("mission/", Mission.as_view(), name="mission"),
+    path("team/", Team.as_view(), name="team"),
 
     path("reservation/", ReservationListView.as_view(), name="reservation_list"),
     path("reservation/create/", ReservationCreateView.as_view(), name="reservation_create"),
@@ -30,4 +37,6 @@ urlpatterns = [
     path("reservation/<int:pk>/delete/", ReservationDeleteView.as_view(), name="reservation_delete"),
 
     path("personal_account/", PersonalAccountListView.as_view(), name="personal_account"),
+
+    path('available-tables/', AvailableTablesListView.as_view(), name='available_tables'),
 ]
