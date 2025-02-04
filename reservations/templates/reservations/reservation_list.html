@@ -12,33 +12,36 @@
     {% endif %}
 
     <p></p>
-    <form class="row" method="post" enctype="multipart/form-data">
-        {% include 'reservations/reservation_form.html' %}
+    <div class="row">
         <div class="col-6">
-            <h4>Доступные бронирования</h4>
-            <table border="1" class="table table-dark table-hover table-bordered">
+            <h4>Бронирование стола</h4>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-light">Создать</button>
+            </form>
+        </div>
+
+        <div class="col-6">
+            <h4>Забронированные столы:</h4>
+            <table class="table table-dark table-hover table-bordered">
                 <tr>
-                    <th>
-                        <h6>Зарезервированные № Столов</h6>
-                    </th>
-                    <th>
-                        <h6>Дата</h6>
-                    </th>
+                    <th>№ Стола</th>
+                    <th>Дата</th>
+                    <th>Время</th>
                 </tr>
-
-                {% for object in object_list %}
+                {% for reservation in reservations %}
                 <tr>
-                    <td>
-                        <p>{{object.table}}</p>
-                    </td>
-                     <td>
-                        <p>{{object.reserved_at|date:"d.m.Y в H:i"}}</p>
-                    </td>
-
+                    <td>{{reservation.table|truncatechars:5}}</td>
+                    <td>{{reservation.reserved_at|date:"d.m.Y"}}</td>
+                    <td>{{reservation.reserved_at|date:"H:i"}}</td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-    </form>
+    </div>
 </div>
+
 {% endblock %}
