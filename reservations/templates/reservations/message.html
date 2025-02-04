@@ -8,6 +8,11 @@
         <p>Ресторан le Chouchou благодарит Вас за ваше сообщение! Наш менеджер обязательно свяжется с вами.</p>
       </h4>
   </div>
+
+  <div class="d-flex gap-2 justify-content-center"> <!-- Используем flexbox и добавляем отступы между кнопками -->
+      <a href="{% url 'reservations:main' %}" class="btn btn-sm btn-outline-secondary">На главную</a>
+      <a href="{% url 'reservations:contacts' %}" class="btn btn-sm btn-outline-secondary">Контактная информация</a>
+  </div>
 </div>
 
 {% endblock %}
