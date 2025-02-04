@@ -1,0 +1,26 @@
+{% extends 'reservations/home.html' %}
+{% load my_tags %}
+{% block content %}
+
+<main class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <img src="/media/1.jpeg" class="card-img-top">
+    <p></p>
+
+    <div class="card text-white bg-dark mb-3" style="max-width: 50rem;">
+        <div class="card-header">Миссия и ценности</div>
+        <div class="card-body">
+            <p class="card-text mb-0">1. Обеспечение высокого уровня обслуживания.</p>
+            <p class="card-text mb-0">2. Качественные блюда из свежих продуктов.</p>
+            <p class="card-text">3. Создание уникального атмосферного пространства.</p>
+            <p class="card-text">4. Инновации в меню и обслуживании.</p>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-center"> <!-- Используем flexbox и добавляем отступы между кнопками -->
+        <a href="{% url 'reservations:main' %}" class="btn btn-sm btn-outline-secondary">На Главную</a>
+        <a class="btn btn-sm btn-outline-secondary mb-0" href="{% url 'reservations:about' %}">О ресторане</a>
+    </div>
+
+</main>
+
+{% endblock %}
