@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -73,8 +75,16 @@ class ReservationListView(ListView):
     def get_queryset(self):
         """Набор данных, для отображения в представлении."""
 
-        # Сортируем бронирования по номеру стола
-        return Reservation.objects.order_by('table', 'reserved_at')
+        # Определяем текущее время
+        now = timezone.now()
+
+        # Вычисляем время, до которого бронирования считаются "в процессе"
+        in_progress_time = now - timedelta(minutes=60)
+
+        # Фильтруем и сортируем бронирования
+        return Reservation.objects.filter(
+            reserved_at__gte=in_progress_time  # Бронирования, которые в процессе или будут
+        ).order_by('table', 'reserved_at')
 
     def post(self, request, *args, **kwargs):
         """Обработка POST-запроса."""
@@ -85,16 +95,31 @@ class ReservationListView(ListView):
 
             # Проверка, находится ли время бронирования в прошлом
             if reservation.reserved_at < timezone.now():
-                messages.error(request, "Дата и время бронирования не могут быть в прошлом. Пожалуйста, выберите другое время.")
+                messages.error(request, "Дата бронирования не может быть в прошлом. Пожалуйста, выберите другое время.")
+                return self.get(request, *args, **kwargs)  # Возврат на ту же страницу
+
+            # Проверка интервала бронирования (60 минут после)
+            reserved_at = reservation.reserved_at
+            start_time = reserved_at
+            end_time = reserved_at + timedelta(minutes=60)
+
+            # Проверка, есть ли уже бронирования в этом интервале
+            interval_reservations = Reservation.objects.filter(
+                reserved_at__range=(start_time, end_time)
+            ).exclude(id=reservation.id)  # Исключаем текущее бронирование, если оно уже существует
+
+            if interval_reservations.exists():
+                messages.error(request, "К сожалению, на это время уже занято. Выберите другой стол или дату.")
                 return self.get(request, *args, **kwargs)  # Возврат на ту же страницу
 
             # Если все проверки пройдены, сохраняем бронирование
             reservation.save()
-            messages.success(request, "Бронирование создано успешно!")
+            messages.success(request, "Ваше бронирование успешно зарегистрировано!")
             return redirect(self.success_url)  # Перенаправление на страницу с успешным бронированием
 
+
         # Если форма не прошла валидацию, отправляем общее сообщение об ошибке
-        messages.error(request, "Проверьте ваши данные и выберите другое время.")
+        messages.error(request, "К сожалению, на это время уже занято. Выберите другой стол или дату")
         return self.get(request, *args, **kwargs)  # Возврат на ту же страницу
 
 

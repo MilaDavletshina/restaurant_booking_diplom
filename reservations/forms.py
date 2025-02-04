@@ -50,8 +50,8 @@ class ReservationForm(ModelForm):
         table = cleaned_data.get("table")
         reserved_at = cleaned_data.get("reserved_at")
 
-        if reserved_at and reserved_at < timezone.now():
-            raise ValidationError("Выбранное время и дата не могут быть в прошлом.")
+        # if reserved_at and reserved_at < timezone.now():
+        #     raise ValidationError("Выбранное время и дата не могут быть в прошлом.")
 
         if table and reserved_at:
             # Определяем начальное и конечное время бронирования
@@ -68,7 +68,7 @@ class ReservationForm(ModelForm):
                 Q(reserved_at__gte=start_time) &
                 Q(reserved_at__lt=end_time)
             ).exists():
-                raise ValidationError(f"Выбранный столик №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
+                raise ValidationError(f"Выбранный стол №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
 
         return cleaned_data
 
