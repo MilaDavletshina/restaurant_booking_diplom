@@ -79,6 +79,12 @@ class UserUpdateForm(StyleFormMixin, ModelForm):
 class UserForgotPasswordForm(PasswordResetForm):
     """Форма запроса на восстановление пароля"""
 
+    class Meta:
+        labels = {
+            'email': 'Электронная почта',
+
+        }
+
     def __init__(self, *args, **kwargs):
         """Обновление стилей формы"""
         super().__init__(*args, **kwargs)
@@ -86,6 +92,9 @@ class UserForgotPasswordForm(PasswordResetForm):
             self.fields[field].widget.attrs.update(
                 {"class": "form-control", "autocomplete": "off"}
             )
+
+        for k, v in self.Meta.labels.items():
+            self[k].label = v
 
 
 class UserSetNewPasswordForm(SetPasswordForm):
