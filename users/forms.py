@@ -46,6 +46,7 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
         for k, v in self.Meta.labels.items():
             self[k].label = v
 
+
 class UserForm(StyleFormMixin, UserChangeForm):
     """Форма данных пользователя"""
     class Meta:
