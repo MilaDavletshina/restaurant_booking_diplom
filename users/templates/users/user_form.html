@@ -4,7 +4,7 @@
 
 <div class="container">
     <h4 class="mt-4">Регистрация нового пользователя на сайте le Chouchou</h4>
-    <div class="card-body">
+    <div class="col-9 btn btn-sm btn-outline-secondary">
         {%  csrf_token %}
         {{ form.as_p }}
     </div>
