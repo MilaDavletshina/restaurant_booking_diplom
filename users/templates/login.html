@@ -1,39 +1,24 @@
 {% extends 'reservations/home.html' %}
 
 {% block content %}
-<main class="flex-shrink-0">
-  <div class="container">
-    <h1 class="mt-5">ресторан Chouchou</h1>
-    <p class="lead"></p>
+<div class="container">
+    <h4 class="mt-5">Вход в личный кабинет</h4>
+    <div class="col-9 btn btn-sm btn-outline-secondary">
+        {%  csrf_token %}
+        {{ form.as_p }}
+    </div>
+
+    <p></p>
+
     <div class="row mb-2">
-    <div class="col-md-12">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form class="row" method="post" enctype="multipart/form-data">
-                    <div class="card">
-                        <div class="card-body">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                        </div>
-                        <div class="row mb-2">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-dark">Вход</button>
-                        </div>
-                        </div>
-                        <div class="row mb-2">
-                        <div class="col-md-12">
-                        <p class="lead">Забыли пароль?</p>
-                        <a class="btn btn-dark" href="{% url 'users:password_reset' %}" role="button">Восстановить</a>
-                        </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="col-md-12">
+            <p class="lead d-flex justify-content-center">
+                <button type="submit" class="btn btn-light me-2">Вход</button>
+                <button type="submit" class="btn btn-light me-2" href="{% url 'users:password_reset' %}">Забыли пароль?</button>
+            </p>
         </div>
     </div>
-    </div>
-    </div>
-  </div>
-</main>
+
+</div>
+
 {% endblock %}
