@@ -47,8 +47,8 @@
 </table>
 <p></p>
 <div class="d-flex gap-2 justify-content-center"> <!-- Используем flexbox и добавляем отступы между кнопками -->
+    <a href="{% url 'reservations:about' %}" class="btn btn-sm btn-outline-secondary">Назад</a>
     <a href="{% url 'reservations:main' %}" class="btn btn-sm btn-outline-secondary">На главную</a>
-    <a href="{% url 'reservations:about' %}" class="btn btn-sm btn-outline-secondary">О ресторане</a>
 </div>
 
 {% endblock %}
