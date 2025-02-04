@@ -2,32 +2,22 @@
 {% load my_tags %}
 {% block content %}
 
+<main class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <img src="/media/1.jpeg" class="card-img-top">
+    <p></p>
 
-<main class="px-3">
-{% for restaurant in object_list %}
-  <h1>{{ restaurant.name }}</h1>
-   <p class="lead">{{ restaurant.description|escape|linebreaks }}</p>
+    <div class="card-body">
+        {% for restaurant in object_list %}
+            <h1 class="card-title">{{ restaurant.name }}</h1>
+            <p class="card-text">{{ restaurant.description|escape|linebreaks }}</p>
+        {% endfor %}
+
+        <div class="d-flex gap-2 justify-content-center"> <!-- Используем flexbox и добавляем отступы между кнопками -->
+            <a href="{% url 'reservations:services' %}" class="btn btn-sm btn-outline-secondary">Услуги</a>
+            <a href="{% url 'reservations:contacts' %}" class="btn btn-sm btn-outline-secondary">Контактная информация</a>
+        </div>
+
+    </div>
 </main>
 
-<main class="px-3">
-    <h2>Перечень предоставляемых услуг</h2>
-    <p>- Бесплатный заказ столиков</p>
-    <p>- Для детей: Стульчики, принадлежности для рисования</p>
-    <p>- Бесплатная парковка</p>
-    <p>- Гардероб</p>
-</main>
-
-
-   <p class="lead">
-       <a href="{% url 'reservations:contacts' %}" class="btn btn-sm btn-outline-secondary">Контактная информация</a>
-   </p>
-
-   <p class="lead">
-     <a href="{% url 'reservations:feedback' %}" class="btn btn-sm btn-outline-secondary">Форма для обратной связи</a>
-   </p>
-{% endfor %}
-
-
-
-</main>
 {% endblock %}
