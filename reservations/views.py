@@ -72,20 +72,6 @@ class ReservationListView(ListView):
         context['form'] = ReservationForm()
         return context
 
-    def get_queryset(self):
-        """Набор данных, для отображения в представлении."""
-
-        # Определяем текущее время
-        now = timezone.now()
-
-        # Вычисляем время, до которого бронирования считаются "в процессе"
-        in_progress_time = now - timedelta(minutes=60)
-
-        # Фильтруем и сортируем бронирования
-        return Reservation.objects.filter(
-            reserved_at__gte=in_progress_time  # Бронирования, которые в процессе или будут
-        ).order_by('table', 'reserved_at')
-
     def post(self, request, *args, **kwargs):
         """Обработка POST-запроса."""
         form = self.form_class(request.POST)
@@ -94,14 +80,14 @@ class ReservationListView(ListView):
             reservation = form.save(commit=False)
 
             # Проверка, находится ли время бронирования в прошлом
-            if reservation.reserved_at < timezone.now():
+            if reservation.reserved_at and reservation.reserved_at < timezone.now():
                 messages.error(request, "Дата бронирования не может быть в прошлом. Пожалуйста, выберите другое время.")
                 return self.get(request, *args, **kwargs)  # Возврат на ту же страницу
 
             # Проверка интервала бронирования (60 минут после)
             reserved_at = reservation.reserved_at
             start_time = reserved_at
-            end_time = reserved_at + timedelta(minutes=60)
+            end_time = start_time + timedelta(minutes=60)
 
             # Проверка, есть ли уже бронирования в этом интервале
             interval_reservations = Reservation.objects.filter(
@@ -121,6 +107,20 @@ class ReservationListView(ListView):
         # Если форма не прошла валидацию, отправляем общее сообщение об ошибке
         messages.error(request, "К сожалению, на это время уже занято. Выберите другой стол или дату")
         return self.get(request, *args, **kwargs)  # Возврат на ту же страницу
+
+    def get_queryset(self):
+        """Набор данных, для отображения в представлении."""
+
+        # Определяем текущее время
+        now = timezone.now()
+
+        # Вычисляем время, до которого бронирования считаются "в процессе"
+        in_progress_time = now - timedelta(minutes=60)
+
+        # Фильтруем и сортируем бронирования
+        return Reservation.objects.filter(
+            reserved_at__gte=in_progress_time  # Бронирования, которые в процессе или будут
+        ).order_by('table', 'reserved_at')
 
 
 class ReservationCreateView(CreateView):
