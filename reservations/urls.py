@@ -9,7 +9,6 @@ from reservations.views import (
     PersonalAccountListView,
     ReservationCreateView,
     ReservationDeleteView,
-    AvailableTablesListView,
     Services,
     Mission,
     Team,
@@ -35,6 +34,4 @@ urlpatterns = [
     path("reservation/<int:pk>/delete/", ReservationDeleteView.as_view(), name="reservation_delete"),
 
     path("personal_account/", PersonalAccountListView.as_view(), name="personal_account"),
-
-    path('available-tables/', AvailableTablesListView.as_view(), name='available_tables'),
 ]
