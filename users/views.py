@@ -1,16 +1,14 @@
 import secrets
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import UserRegisterForm, UserForgotPasswordForm, UserSetNewPasswordForm, UserUpdateForm
+from users.forms import UserRegisterForm, UserForgotPasswordForm, UserSetNewPasswordForm
 from users.models import User
 
 
@@ -76,49 +74,3 @@ class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView
         context["title"] = "Установить новый пароль"
         return context
 
-
-class UserListView(ListView, LoginRequiredMixin):
-    """Страница пользователей"""
-
-    model = User
-    template_name = "users/user_list.html"
-
-
-class UserDetailView(DetailView, LoginRequiredMixin):
-    """Просмотр пользователя"""
-
-    model = User
-    form_class = UserUpdateForm
-
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if self.request.user.is_superuser:
-            return self.object
-        raise PermissionDenied
-
-
-class UserUpdateView(UpdateView, LoginRequiredMixin):
-    """Пользователь - обновление"""
-
-    model = User
-    form_class = UserUpdateForm
-    success_url = reverse_lazy("users:user_list")
-
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if self.request.user.is_superuser:
-            return self.object
-        raise PermissionDenied
-
-
-class UserDeleteView(DeleteView):
-    """Пользователь - удаление"""
-
-    model = User
-    success_url = reverse_lazy("users:user_list")
-
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if self.request.user.is_superuser:
-            return self.object
-        raise PermissionDenied
