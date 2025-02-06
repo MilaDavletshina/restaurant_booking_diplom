@@ -1,4 +1,5 @@
 from django.db import models
+
 from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
@@ -6,10 +7,23 @@ NULLABLE = {"blank": True, "null": True}
 
 class Restaurant(models.Model):
     """Модель ресторана."""
-    name = models.CharField(max_length=20, verbose_name="Название", help_text="Введите название")
-    description = models.TextField(verbose_name="Описание", help_text="Введите описание")
-    history = models.TextField(verbose_name="История ресторана", help_text="Введите описание истории", **NULLABLE)
-    mission = models.TextField(verbose_name="Миссия и ценности", help_text="Введите описание миссии и ценностей", **NULLABLE)
+
+    name = models.CharField(
+        max_length=20, verbose_name="Название", help_text="Введите название"
+    )
+    description = models.TextField(
+        verbose_name="Описание", help_text="Введите описание"
+    )
+    history = models.TextField(
+        verbose_name="История ресторана",
+        help_text="Введите описание истории",
+        **NULLABLE,
+    )
+    mission = models.TextField(
+        verbose_name="Миссия и ценности",
+        help_text="Введите описание миссии и ценностей",
+        **NULLABLE,
+    )
     owner = models.ForeignKey(
         User,
         verbose_name="Владелец",
@@ -25,11 +39,14 @@ class Restaurant(models.Model):
     class Meta:
         verbose_name = "Ресторан"
         verbose_name_plural = "Рестораны"
-        ordering = ["name",]
+        ordering = [
+            "name",
+        ]
 
 
 class Table(models.Model):
     """Модель стола."""
+
     number = models.IntegerField(unique=True, verbose_name="Номер стола")
     capacity = models.IntegerField(verbose_name="Вместимость столика")
     is_available = models.BooleanField(default=True, verbose_name="Доступность столика")
@@ -48,25 +65,16 @@ class Table(models.Model):
 
 class Reservation(models.Model):
     """Модель бронирования."""
+
     table = models.ForeignKey(
-        Table,
-        on_delete=models.CASCADE,
-        verbose_name="Номер столика",
-        **NULLABLE
+        Table, on_delete=models.CASCADE, verbose_name="Номер столика", **NULLABLE
     )
-    reserved_at = models.DateTimeField(
-        verbose_name="Дата бронирования",
-        **NULLABLE
-    )
+    reserved_at = models.DateTimeField(verbose_name="Дата бронирования", **NULLABLE)
     customer_name = models.CharField(
-        max_length=100,
-        verbose_name="Имя клиента",
-        **NULLABLE
+        max_length=100, verbose_name="Имя клиента", **NULLABLE
     )
     customer_contact = models.CharField(
-        max_length=100,
-        verbose_name="Контактная информация",
-        **NULLABLE
+        max_length=100, verbose_name="Контактная информация", **NULLABLE
     )
     owner = models.ForeignKey(
         User,
@@ -77,10 +85,11 @@ class Reservation(models.Model):
     )
 
     def __str__(self):
-        return f'Зарезервировано для {self.customer_name} в {self.reserved_at} столик {self.table}'
+        return f"Зарезервировано для {self.customer_name} в {self.reserved_at} столик {self.table}"
 
     class Meta:
         verbose_name = "Бронирование"
         verbose_name_plural = "Бронирования"
-        ordering = ["reserved_at", ]
-
+        ordering = [
+            "reserved_at",
+        ]
