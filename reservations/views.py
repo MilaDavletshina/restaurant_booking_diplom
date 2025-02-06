@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (TemplateView, ListView, CreateView, UpdateView, DeleteView)
 from reservations.forms import ReservationForm
-from reservations.models import Reservation, Restaurant, Table
+from reservations.models import Reservation, Restaurant
 from users.models import User
 
 
@@ -61,6 +61,7 @@ class ReservationListView(ListView):
     def get_object(self, queryset=None):
         """Получение одного объекта."""
         self.object = super().get_object(queryset)
+        self.object.save()
         if self.request.user == self.object.owner:
             self.object.save()
             return self.object
@@ -130,23 +131,23 @@ class ReservationCreateView(CreateView):
     template_name = "reservations/reservation_list.html"
     success_url = reverse_lazy("reservations:reservation_list")
 
-    def form_valid(self, form):
-        """Обработка данных, если форма прошла валидацию."""
-
-        # Сохраняем объект Reservation
-        self.object = form.save()
-
-        # Добавляем сообщение об успешном бронировании
-        messages.success(self.request,
-                         f"Бронирование столика №{self.object.table.number} на {self.object.reserved_at} успешно создано.")
-
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        """Обработка данных, если форма не прошла валидацию."""
-
-        # Если форма не валидна, показываем ее с ошибками
-        return super().form_invalid(form)
+    # def form_valid(self, form):
+    #     """Обработка данных, если форма прошла валидацию."""
+    #
+    #     # Сохраняем объект Reservation
+    #     self.object = form.save()
+    #
+    #     # Добавляем сообщение об успешном бронировании
+    #     messages.success(self.request,
+    #                      f"Бронирование столика №{self.object.table.number} на {self.object.reserved_at} успешно создано.")
+    #
+    #     return super().form_valid(form)
+    #
+    # def form_invalid(self, form):
+    #     """Обработка данных, если форма не прошла валидацию."""
+    #
+    #     # Если форма не валидна, показываем ее с ошибками
+    #     return super().form_invalid(form)
 
 
 class ReservationUpdateView(UpdateView, LoginRequiredMixin):
@@ -154,24 +155,50 @@ class ReservationUpdateView(UpdateView, LoginRequiredMixin):
 
     model = Reservation
     form_class = ReservationForm
+    template_name = "reservations/reservation_list.html"
+    context_object_name = 'reservation'
     success_url = reverse_lazy("reservations:personal_account")
-
-    def form_valid(self, form):
-        """Обработка данных, если форма прошла валидацию."""
-
-        # сохраняем форму
-        form.save()
-        # Устанавливаем success_url в зависимости от того, редактируем ли мы бронирование
-        self.success_url = reverse_lazy("reservations:personal_account")
-        return super().form_valid(form)
 
     def get_object(self, queryset=None):
         """Получение одного объекта."""
-        self.object = super().get_object(queryset)
-        if self.request.user == self.object.owner:
-            self.object.save()
-            return self.object
-        raise PermissionDenied
+        reservation = super().get_object(queryset)
+        if self.request.user != reservation.owner:
+            raise PermissionDenied("Вы не можете редактировать это бронирование.")
+        return reservation
+
+    def get_context_data(self, **kwargs):
+        """Добавление данных в контекст шаблона."""
+        context = super().get_context_data(**kwargs)
+        context['from_personal_account'] = True  # чтобы было доступно только при режиме редактирования
+        return context
+
+    def form_valid(self, form):
+        """Обработка данных, если форма прошла валидацию."""
+        reservation = form.save(commit=False)
+
+        # Проверка, что дата бронирования не в прошлом
+        if reservation.reserved_at and reservation.reserved_at < timezone.now():
+            messages.error(self.request, "Дата бронирования не может быть в прошлом.")
+            return self.form_invalid(form)
+
+        # Проверка интервала бронирования (60 минут после)
+        reserved_at = reservation.reserved_at
+        start_time = reserved_at
+        end_time = start_time + timedelta(minutes=60)
+
+        # Проверка, есть ли уже бронирования в этом интервале
+        interval_reservations = Reservation.objects.filter(
+            reserved_at__range=(start_time, end_time)
+        ).exclude(id=reservation.id)  # Исключаем текущее бронирование
+
+        if interval_reservations.exists():
+            messages.error(self.request, "К сожалению, на это время уже занято.")
+            return self.form_invalid(form)
+
+        # Если все проверки пройдены, сохраняем бронирование
+        reservation.save()
+        messages.success(self.request, "Бронирование успешно обновлено!")
+        return super().form_valid(form)
 
 
 class ReservationDeleteView(DeleteView):
@@ -201,34 +228,13 @@ class PersonalAccountListView(ListView):
         queryset = Reservation.objects.filter(owner=self.request.user).order_by('reserved_at', 'table')
         return queryset
 
-    def get_object(self, queryset=None):
-        """Получение одного объекта."""
-        self.object = super().get_object(queryset)
-        if self.request.user == self.object.owner:
-            self.object.save()
-            return self.object
-        raise PermissionDenied
-
-
-class AvailableTablesListView(ListView):
-    model = Table
-    template_name = 'reservations/reservation_list.html'
-    context_object_name = 'available_tables'
-
-    def get_queryset(self):
-        """Набор данных, для отображения в представлении."""
-
-        # Получаем текущее время
-        now = timezone.now()
-
-        # Находим все столы, которые не забронированы на текущий момент
-        reserved_tables = Reservation.objects.filter(
-            reserved_at__lte=now,  # Бронирования, которые уже начались
-        ).values_list('table_id', flat=True)  # Получаем ID забронированных столов
-
-        # Исключаем забронированные столы из общего списка
-        available_tables = Table.objects.exclude(id__in=reserved_tables).filter(is_available=True)
-        return available_tables
+    # def get_object(self, queryset=None):
+    #     """Получение одного объекта."""
+    #     self.object = super().get_object(queryset)
+    #     if self.request.user == self.object.owner:
+    #         self.object.save()
+    #         return self.object
+    #     raise PermissionDenied
 
 
 class Services(TemplateView):
