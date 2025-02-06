@@ -4,7 +4,7 @@ from .models import Reservation, Restaurant, Table
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ("id", "table", "reserved_at", "customer_name", "customer_contact")
+    list_display = ("id", "owner", "table", "reserved_at", "customer_name", "customer_contact")
     list_filter = ("table", "customer_name", "reserved_at", )
     search_fields = ("table", "customer_name", "reserved_at", )
 
