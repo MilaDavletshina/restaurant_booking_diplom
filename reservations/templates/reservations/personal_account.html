@@ -3,9 +3,13 @@
 {% block content %}
 
 <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <label class="btn btn-outline-success" for="success-outlined">{{ message }}</label>
+        {% endfor %}
+    {% endif %}
     <p></p>
     <h4>Ваши бронирования</h4>
-
     <table border="1" class="table table-dark table-hover table-bordered">
         <tr>
             <th>
@@ -51,5 +55,6 @@
         </tr>
         {% endfor %}
     </table>
+
 </div>
 {% endblock %}
