@@ -44,38 +44,39 @@ class ReservationForm(ModelForm):
         self.fields["customer_contact"].widget.attrs.update({'class': 'form-control', 'placeholder': 'Укажите контактный номер телефона для связи'})
         self.fields["owner"].widget.attrs.update({'class': 'form-control'})
 
-    def clean(self):
-        """Валидация формы, на проверку отсутствия брони выбранного столика."""
-        cleaned_data = super().clean()
-        table = cleaned_data.get("table")
-        reserved_at = cleaned_data.get("reserved_at")
-
-        # if reserved_at and reserved_at < timezone.now():
-        #     raise ValidationError("Выбранное время и дата не могут быть в прошлом.")
-
-        if table and reserved_at:
-            # Определяем начальное и конечное время бронирования
-            start_time = reserved_at
-            end_time = reserved_at + timedelta(minutes=60)
-
-            # Проверяем, есть ли текущее бронирование на этот столик
-            if Reservation.objects.filter(
-                    Q(table=table) &
-                    Q(reserved_at__lt=end_time) &
-                    Q(reserved_at__gte=start_time)
-            ).exists() or Reservation.objects.filter(
-                Q(table=table) &
-                Q(reserved_at__gte=start_time) &
-                Q(reserved_at__lt=end_time)
-            ).exists():
-                raise ValidationError(f"Выбранный стол №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
-
-        return cleaned_data
-
-    def save(self, commit=True):
-        """Сохранение успешного бронирования."""
-        reservation = super().save(commit=False)
-
-        if commit:
-            reservation.save()  # Сохраняем в БД
-        return reservation
+    ## Настройки для формы, если использовать форму отдельно
+    # def clean(self):
+    #     """Валидация формы, на проверку отсутствия брони выбранного столика."""
+    #     cleaned_data = super().clean()
+    #     table = cleaned_data.get("table")
+    #     reserved_at = cleaned_data.get("reserved_at")
+    #
+    #     if reserved_at and reserved_at < timezone.now():
+    #         raise ValidationError("Выбранное время и дата не могут быть в прошлом.")
+    #
+    #     if table and reserved_at:
+    #         # Определяем начальное и конечное время бронирования
+    #         start_time = reserved_at
+    #         end_time = reserved_at + timedelta(minutes=60)
+    #
+    #         # Проверяем, есть ли текущее бронирование на этот столик
+    #         if Reservation.objects.filter(
+    #                 Q(table=table) &
+    #                 Q(reserved_at__lt=end_time) &
+    #                 Q(reserved_at__gte=start_time)
+    #         ).exists() or Reservation.objects.filter(
+    #             Q(table=table) &
+    #             Q(reserved_at__gte=start_time) &
+    #             Q(reserved_at__lt=end_time)
+    #         ).exists():
+    #             raise ValidationError(f"Выбранный стол №{table.number} уже забронирован на это время, пожалуйста выберите другое время.")
+    #
+    #     return cleaned_data
+    #
+    # def save(self, commit=True):
+    #     """Сохранение успешного бронирования."""
+    #     reservation = super().save(commit=False)
+    #
+    #     if commit:
+    #         reservation.save()  # Сохраняем в БД
+    #     return reservation
