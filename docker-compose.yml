@@ -3,7 +3,13 @@ version: "3"
 services:
 
   db:
-    image: postgres:16-alpine
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: POSTGRES_DB
+      POSTGRES_USER: POSTGRES_USER
+      POSTGRES_PASSWORD: POSTGRESS_PASSWORD
+    ports:
+      - "5432:5432"
     restart: on-failure
     env_file:
       - .env
@@ -19,6 +25,16 @@ services:
     networks:
       - my_network
 
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - my_network
+
   app:
     build: .
     tty: true
@@ -29,6 +45,8 @@ services:
       - .:/app
     env_file:
       - .env
+    depends_on:
+      - db
     networks:
       - my_network
 
