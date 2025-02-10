@@ -67,15 +67,10 @@ class Reservation(models.Model):
     """Модель бронирования."""
 
     table = models.ForeignKey(
-        Table, on_delete=models.CASCADE, verbose_name="Номер столика", **NULLABLE
-    )
-    reserved_at = models.DateTimeField(verbose_name="Дата бронирования", **NULLABLE)
-    customer_name = models.CharField(
-        max_length=100, verbose_name="Имя клиента", **NULLABLE
-    )
-    customer_contact = models.CharField(
-        max_length=100, verbose_name="Контактная информация", **NULLABLE
-    )
+        Table, on_delete=models.CASCADE, verbose_name="Номер столика")
+    reserved_at = models.DateTimeField(verbose_name="Дата бронирования")
+    customer_name = models.CharField(max_length=100, verbose_name="Имя клиента")
+    customer_contact = models.CharField(max_length=100, verbose_name="Контактная информация")
     owner = models.ForeignKey(
         User,
         verbose_name="Пользователь",
