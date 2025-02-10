@@ -1,60 +1,42 @@
 services:
-
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: POSTGRES_DB
-      POSTGRES_USER: POSTGRES_USER
-      POSTGRES_PASSWORD: POSTGRES_PASSWORD
-      POSTGRES_HOST: POSTGRES_HOST
-      POSTGRES_PORT: POSTGRES_PORT
-    ports:
-      - "5432:5432"
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     restart: on-failure
     env_file:
       - .env
     expose:
       - "5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - .pg_data:/etc/postgresql/16/main
     healthcheck:
-      test: ["CMD-SHELL", "pg-isready -h db -U $POSTGRES_USER"]
+      test: ["CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER"]
       interval: 10s
       retries: 5
       timeout: 5s
-    networks:
-      - my_network
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    networks:
-      - my_network
 
   app:
     build: .
     tty: true
     ports:
       - "8000:8000"
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+#    command: sh -c "sleep 10 && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    command: sh -c "sleep 10 && python3 manage.py migrate && python3 manage.py csu && python3 manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
     environment:
       DATABASE_URL: postgres://postgres:POSTGRES_PASSWORD@db:5432/POSTGRES_DB
     volumes:
       - .:/app
     env_file:
       - .env
-    depends_on:
-      - db
-    networks:
-      - my_network
+
 
 volumes:
   pg_data:
-
-networks:
-  my_network:
-    driver: bridge
