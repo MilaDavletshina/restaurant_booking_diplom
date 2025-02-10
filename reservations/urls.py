@@ -5,7 +5,7 @@ from reservations.views import (AboutView, Contacts, Feedback, MainView,
                                 Mission, PersonalAccountListView,
                                 ReservationCreateView, ReservationDeleteView,
                                 ReservationListView, ReservationUpdateView,
-                                Services, Team)
+                                Services, Team, History)
 
 app_name = ReservationsConfig.name
 
@@ -17,6 +17,7 @@ urlpatterns = [
     path("about/", AboutView.as_view(), name="about"),
     path("services/", Services.as_view(), name="services"),
     path("mission/", Mission.as_view(), name="mission"),
+    path("history/", History.as_view(), name="history"),
     path("team/", Team.as_view(), name="team"),
     path("reservation/", ReservationListView.as_view(), name="reservation_list"),
     path(
