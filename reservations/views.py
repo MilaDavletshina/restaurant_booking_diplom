@@ -254,3 +254,9 @@ class Team(TemplateView):
     """Cтраница команда."""
 
     template_name = "reservations/team.html"
+
+
+class History(TemplateView):
+    """Cтраница истории."""
+
+    template_name = "reservations/history.html"
