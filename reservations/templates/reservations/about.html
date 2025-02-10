@@ -6,11 +6,11 @@
     <img src="/media/1.jpeg" class="card-img-top">
     <p></p>
     <div class="card-body">
-        {% for restaurant in object_list %}
-            <h1 class="card-title">История ресторана</h1>
-            <p class="card-text">{{ restaurant.history|escape|linebreaks }}</p>
-        {% endfor %}
 
+        <h1 class="card-title">История ресторана</h1>
+        <p class="card-text">В начале XX века, в эпоху расцвета искусства, культуры и кулинарии, на крыше музея Quai Branly-Жака Ширака, в самом сердце Парижа, родился ресторан, который стал воплощением гармонии двух великих культур — русской и французской. Его создание — это история любви, страсти к кулинарии и стремления к прекрасному...</p>
+        <a href="{% url 'reservations:history' %}" class="mt-auto text-white-50" style="font-weight: normal; font-size: 0.90rem;">продолжить чтение...</a>
+        <p></p>
         <div class="d-flex gap-2 justify-content-center"> <!-- Используем flexbox и добавляем отступы между кнопками -->
             <a href="{% url 'reservations:mission' %}" class="btn btn-sm btn-outline-secondary">Миссия и ценности</a>
             <a href="{% url 'reservations:team' %}" class="btn btn-sm btn-outline-secondary">Команда</a>
